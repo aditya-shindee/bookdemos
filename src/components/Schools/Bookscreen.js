@@ -1,24 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../firebase-config.js";
-import { useNavigate } from 'react-router-dom';
-import { ReactComponent as CloseIcon } from '../../close_icon2.svg';
+import React from 'react';
+
 import './search.css';
-import { ReactComponent as MenuIcon }  from '../../menu_5.svg';
-import { ReactComponent as CartIcon }  from '../../cart_5.svg';
 
-const SearchSchoolScreen = () => {
-  const navigate = useNavigate();
-  const [schools, setSchools] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidecartOpen, setcartOpen] = useState(false);
 
-  // Firestore reference
-  
-  const clearSearch = () => {
-    setSearchTerm('');
-  };
+const bookScreen = () => {
 
   
   return (
@@ -39,4 +24,4 @@ const SearchSchoolScreen = () => {
   );
 };
 
-export default SearchSchoolScreen;
+export default bookScreen;

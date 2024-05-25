@@ -56,20 +56,3 @@ const ConfirmSchoolScreen = () => {
 };
 
 export default ConfirmSchoolScreen;
-
-
-// return (
-//     <div className="confirm-school-screen">
-//       <div className="school-details-card">
-//         <h3>School name</h3>
-//         <img src={school.school_logo_url} alt={`${school.school_name} Logo`} className="school-logo" />
-//         <h2 className="school-name">{school.school_name}</h2>
-//         <div className="school-address">
-//           <p>Address:</p>
-//           <p>{school.school_address}</p> whitespace-pre-wrap line-clamp-3 / text-xl font-bold font-lexend text-center mt-10
-//         </div>
-//         <button onClick={proceedToProducts} className="proceed-button">Proceed to products</button>
-//       </div>
-//     </div>
-//   );
-// };

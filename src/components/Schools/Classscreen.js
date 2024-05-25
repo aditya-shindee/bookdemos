@@ -2,24 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase-config.js";
 import { useNavigate } from 'react-router-dom';
-import { ReactComponent as CloseIcon } from '../../close_icon2.svg';
 import './search.css';
 import { ReactComponent as MenuIcon }  from '../../menu_5.svg';
-import { ReactComponent as CartIcon }  from '../../cart_5.svg';
 
 const SearchSchoolScreen = () => {
   const navigate = useNavigate();
   const [schools, setSchools] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidecartOpen, setcartOpen] = useState(false);
 
   // Firestore reference
   const schoolsCollectionRef = collection(db, "class");
-  
-  const clearSearch = () => {
-    setSearchTerm('');
-  };
 
   useEffect(() => {
     const fetchSchools = async () => {
@@ -43,18 +36,6 @@ const SearchSchoolScreen = () => {
     school.class_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Handle search input change
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
-  const contactUs = () => {
-    navigate("/contactus");
-  };
-
-  const handleSchoolSelect = (school) => {
-    navigate(`/confirm-school/${school.school_id}`, { state: { school } });
-  };
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -62,10 +43,6 @@ const SearchSchoolScreen = () => {
 
   const handleClassSelect = () => {
     navigate("/books");
-  };
-
-  const togglecart = () => {
-    navigate("/cartscreen");
   };
   
   return (
@@ -96,22 +73,7 @@ const SearchSchoolScreen = () => {
               ))}
             </ul>
           </div>
-          {/* <div className={`absolute top-0 left-0 rounded-l-3xl transform ${sidebarOpen ? '-translate-x-0' : '-translate-x-full'} h-full w-64 bg-gray-100 p-4 transition-transform duration-300`}>
-            <ul className="sidebar-menu">
-              <li><a href="#" className="active">Profile</a></li>
-              <li><a href="#">Orders</a></li>
-              <li><a href="#" onClick={contactUs}>Contact us</a></li>
-            </ul>
-          </div>     */}
         </div>
-      </div>
-      <div class="flex justify-center items-end bg-gray-200 -mt-20 mb-10">
-        <button
-          onClick={contactUs}
-          class="text-gray-800 hover:text-black  font-semibold py-2 px-2 font-lexend"
-        >
-          Contact us
-        </button>
       </div>
     </body> 
   );
