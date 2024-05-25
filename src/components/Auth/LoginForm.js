@@ -119,6 +119,7 @@ const LoginForm = () => {
                 full_name: user.displayName ,
                 user_id: user.uid,
                 email_id: user.email,
+                role: "user",
                 phone_number: "",
                 address: "",
                 pincode: "",

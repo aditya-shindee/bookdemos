@@ -175,7 +175,12 @@ const SignUpForm = () => {
       password: '',
     },
     validationSchema: Yup.object({
-      fullName: Yup.string().required('Full name is required'),
+      fullName: Yup.string().required('Full name is required').test('minWordsAndSpace', 'Full name must have at least 3 words with a space and a word or letter',
+                (value) => {
+                    const regex = /^[a-zA-Z]{2,}\s[a-zA-Z]+$/;
+                    return regex.test(value);
+                  }
+                ),
       email: Yup.string().email('Invalid email address').required('Email is required'),
       password: Yup.string().required('Password is required').min(8, 'Password must be at least 8 characters'),
     }),
@@ -379,3 +384,68 @@ export default SignUpForm;
 // generateImageAndUpload('John Doe')
 //   .then(url => console.log(`Image URL: ${url}`))
 //   .catch(console.error);
+
+
+// avatar --------------------------------------
+
+// import React, { useState } from 'react';
+// import html2canvas from 'html2canvas';
+// import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
+// const TextToImage = () => {
+//   const [text, setText] = useState('');
+//   const [imageUrl, setImageUrl] = useState('');
+
+//   const generateImage = async () => {
+//     if (text.length < 2) return; // Ensure we have at least 2 characters
+
+//     // Create an element to render the text
+//     const textElement = document.createElement('div');
+//     textElement.style.width = '100px';
+//     textElement.style.height = '100px';
+//     textElement.style.display = 'flex';
+//     textElement.style.justifyContent = 'center';
+//     textElement.style.alignItems = 'center';
+//     textElement.style.backgroundColor = 'gray';
+//     textElement.style.fontSize = '40px';
+//     textElement.style.color = 'white';
+        // textElement.style.fontFamily = "'Open Sans', sans-serif";
+        // textElement.style.top = '-40px';
+//     textElement.textContent = text.substring(0, 2).toUpperCase();
+
+//     document.body.appendChild(textElement);
+
+//     // Generate the image
+//     const canvas = await html2canvas(textElement);
+//     textElement.remove(); // Clean up the text element from the DOM
+
+//     canvas.toBlob(blob => {
+//       uploadImage(blob);
+//     });
+//   };
+
+//   const uploadImage = async (blob) => {
+//     const storage = getStorage();
+//     const storageRef = ref(storage, 'images/' + Date.now() + '.png');
+
+//     uploadBytes(storageRef, blob).then((snapshot) => {
+//       getDownloadURL(snapshot.ref).then((url) => {
+//         setImageUrl(url);
+//       });
+//     });
+//   };
+
+//   return (
+//     <div>
+//       <input
+//         type="text"
+//         value={text}
+//         onChange={(e) => setText(e.target.value)}
+//       />
+//       <button onClick={generateImage}>Generate Image</button>
+//       {imageUrl && <img src={imageUrl} alt="Generated" />}
+//     </div>
+//   );
+// };
+
+// export default TextToImage;

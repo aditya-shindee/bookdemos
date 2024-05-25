@@ -4,11 +4,15 @@ import { db } from "../../firebase-config.js";
 import { useNavigate } from 'react-router-dom';
 import { ReactComponent as CloseIcon } from '../../close_icon2.svg';
 import './search.css';
+import { ReactComponent as MenuIcon }  from '../../menu_5.svg';
+import { ReactComponent as CartIcon }  from '../../cart_5.svg';
 
 const SearchSchoolScreen = () => {
   const navigate = useNavigate();
   const [schools, setSchools] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidecartOpen, setcartOpen] = useState(false);
 
   // Firestore reference
   const schoolsCollectionRef = collection(db, "school");
@@ -49,19 +53,31 @@ const SearchSchoolScreen = () => {
   };
 
   const handleSchoolSelect = (school) => {
-    navigate(`/confirm-school/${school.school_id}`, { state: { school } });
+    navigate(`/class/${school.school_id}`, { state: { school } });
+  };
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
+  const togglecart = () => {
+    navigate("/cartscreen");
   };
   
   return (
-    <body class="overflow-x-hidden ">
-      <div class="bg-gray-200 flex justify-center items-center h-screen">
+    <body class="overflow-x-hidden">
+      <div class="relative bg-gray-200 flex justify-center items-center h-screen">
         <div class="bg-white w-11/12 h-5/6 md:w-5/6 md:h-5/6 md:max-w-xl rounded-3xl shadow-lg p-3 flex flex-col -mt-14 relative">
-          <h1 class="text-2xl font-bold font-lexend-mega text-center mt-2">UNIFORMITY</h1>
-          <div class="flex items-center bg-gray-200 rounded-lg px-2 py-2 mt-6 relative">
+          
+          <button className="sidebar-toggle left-4 mx-2 mt-4 -mb-4" onClick={toggleSidebar}>
+            <MenuIcon className="h-5 w-5 hover:text-gray-600"/>
+          </button>
+          <h1 class="text-2xl font-bold font-lexend-exa text-center mt-2 ">ICSE BOOKS</h1>
+          <div class="flex items-center bg-gray-200 rounded-lg px-2 py-2 mt-4 relative">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-1 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-            <input class="bg-gray-200 outline-none font-lexend placeholder-gray-500 text-sm pl-2 w-full" type="text" placeholder="Search for schools" value={searchTerm} onChange={handleSearchChange}></input>
+            <input class="bg-gray-200 outline-none font-lexend-exa placeholder-gray-500 text-sm pl-2 w-full" type="text" placeholder="Search for schools" value={searchTerm} onChange={handleSearchChange}></input>
             {searchTerm && (
               <button onClick={clearSearch} className="absolute right-2 top-1/2 transform -translate-y-1/2 -translate-x-1">
                 <CloseIcon className="h-5 w-5 text-gray-400 hover:text-gray-600" />
@@ -82,12 +98,18 @@ const SearchSchoolScreen = () => {
                   <img src={school.school_logo_url} alt={`${school.school_name} Logo`} className="h-10 w-10 rounded-lg" />
                   <div>
                     <h3 className="text-sm font-semibold truncate w-64 font-lexend-exa">{school.school_name}</h3>
-                    <p className="text-xs text-gray-500 truncate w-64 font-lexend-exa">{school.school_address}</p>
                   </div>
                 </li>
               ))}
             </ul>
-          </div>    
+          </div>
+          {/* <div className={`absolute top-0 left-0 rounded-l-3xl transform ${sidebarOpen ? '-translate-x-0' : '-translate-x-full'} h-full w-64 bg-gray-100 p-4 transition-transform duration-300`}>
+            <ul className="sidebar-menu">
+              <li><a href="#" className="active">Profile</a></li>
+              <li><a href="#">Orders</a></li>
+              <li><a href="#" onClick={contactUs}>Contact us</a></li>
+            </ul>
+          </div>     */}
         </div>
       </div>
       <div class="flex justify-center items-end bg-gray-200 -mt-20 mb-10">

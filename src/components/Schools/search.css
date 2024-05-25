@@ -16,3 +16,95 @@
 ::-webkit-scrollbar-thumb:hover {
     background: #a0aec0;
 }
+
+.app-container {
+    position: relative;
+}
+
+.menu-icon {
+    /* Position your menu icon */
+    position: absolute;
+    top: 1rem;
+    /* Adjust as needed */
+    left: 1rem;
+    /* Adjust as needed */
+    z-index: 30;
+    /* Additional styling */
+}
+
+.sidebar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* Align with the left edge of the white box */
+    transform: translateX(-100%);
+    /* Hide the sidebar initially */
+    width: 16rem;
+    /* Or the width of your sidebar */
+    height: 100%;
+    /* Match the height of the parent container */
+    background-color: #fff;
+    /* Or the desired background of your sidebar */
+    z-index: 20;
+    /* Add a box shadow or other styling as needed */
+}
+
+/* When sidebarOpen is true, 'translate-x-0' class is applied */
+.translate-x-0 {
+    transform: translateX(0%);
+}
+
+/* When sidebarOpen is false, '-translate-x-full' class is applied */
+.-translate-x-full {
+    transform: translateX(-100%);
+}
+
+.sidebar-open {
+    transform: translateX(0);
+    /* Slide in */
+}
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-menu li a {
+    display: block;
+    padding: 10px 20px;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.sidebar-menu li a:hover,
+.sidebar-menu li a.active {
+    background-color: #f4f4f4;
+}
+
+.main-content {
+    transition: margin-left 0.3s ease;
+    padding: 20px;
+}
+
+.sidebar-toggle {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 101;
+}
+
+/* Additional styles */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    padding: 8px;
+    cursor: pointer;
+}
+
+li:hover {
+    background-color: #f0f0f0;
+}
