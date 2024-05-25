@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase-config.js";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ReactComponent as CloseIcon } from '../../close_icon2.svg';
 import './search.css';
-import { ReactComponent as MenuIcon }  from '../../menu_5.svg';
+
+import { analytics } from "../../firebase-config.js";// Adjust the path as necessary
+import { logEvent } from 'firebase/analytics';
 
 const SearchSchoolScreen = () => {
   const navigate = useNavigate();
@@ -14,6 +16,15 @@ const SearchSchoolScreen = () => {
 
   // Firestore reference
   const schoolsCollectionRef = collection(db, "school");
+
+  const location = useLocation();
+
+  useEffect(() => {
+      logEvent(analytics, 'page_view', {
+        page_path: location.pathname,
+        page_title: document.title
+      });
+    }, [location]);
   
   const clearSearch = () => {
     setSearchTerm('');
@@ -47,11 +58,12 @@ const SearchSchoolScreen = () => {
   };
 
   const handleSchoolSelect = (school) => {
-    navigate(`/class/${school.school_id}`, { state: { school } });
-  };
+    logEvent(analytics, 'button_click', {
+      school: school.school_id,
+    });
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
+    navigate(`/class/${school.school_id}`, { state: { school } });
+
   };
 
   
@@ -60,9 +72,6 @@ const SearchSchoolScreen = () => {
       <div class="relative bg-gray-200 flex justify-center items-center h-screen">
         <div class="bg-white w-11/12 h-5/6 md:w-5/6 md:h-5/6 md:max-w-xl rounded-3xl shadow-lg p-3 flex flex-col -mt-14 relative">
           
-          <button className="sidebar-toggle left-4 mx-2 mt-4 -mb-4" onClick={toggleSidebar}>
-            <MenuIcon className="h-5 w-5 hover:text-gray-600"/>
-          </button>
           <h1 class="text-2xl font-bold font-lexend-exa text-center mt-2 ">ICSE BOOKS</h1>
           <div class="flex items-center bg-gray-200 rounded-lg px-2 py-2 mt-4 relative">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-1 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">

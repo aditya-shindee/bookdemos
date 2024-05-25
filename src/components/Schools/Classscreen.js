@@ -3,13 +3,13 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase-config.js";
 import { useNavigate } from 'react-router-dom';
 import './search.css';
-import { ReactComponent as MenuIcon }  from '../../menu_5.svg';
+import { analytics } from "../../firebase-config.js";// Adjust the path as necessary
+import { logEvent } from 'firebase/analytics';
 
 const SearchSchoolScreen = () => {
   const navigate = useNavigate();
   const [schools, setSchools] = useState([]);
   const [searchTerm] = useState('');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Firestore reference
   const schoolsCollectionRef = collection(db, "class");
@@ -37,12 +37,11 @@ const SearchSchoolScreen = () => {
   );
 
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
-
-  const handleClassSelect = () => {
-    navigate("/books");
+  const handleClassSelect = (school) => {
+    logEvent(analytics, 'button_click', {
+      class: school.class_name,
+    });
+    navigate(`/books`);
   };
   
   return (
@@ -50,24 +49,21 @@ const SearchSchoolScreen = () => {
       <div class="relative bg-gray-200 flex justify-center items-center h-screen">
         <div class="bg-white w-11/12 h-5/6 md:w-5/6 md:h-5/6 md:max-w-xl rounded-3xl shadow-lg p-3 flex flex-col -mt-14 relative">
           
-          <button className="sidebar-toggle left-4 mx-2 mt-4 -mb-4" onClick={toggleSidebar}>
-            <MenuIcon className="h-5 w-5 hover:text-gray-600"/>
-          </button>
           <h1 class="text-2xl font-bold font-lexend-exa text-center mt-2 ">ICSE BOOKS</h1>
 
           <div class="w-96 h-0 text-left text-black py-0 mb-4">
             <p class="font-bold text-xl font-lexend-exa mb-10 mt-10 indent-2">CLASS/GRADE</p>
           </div>
           <div className="flex-grow mt-10 overflow-y-auto scrollbar-thin scrollbar-rounded scrollbar-thumb-gray-400 scrollbar-track-gray-100">
-            <ul className="space-y-2 mt-2">
+            <ul className="space-y-1 mt-2">
               {filteredSchools.map((school) => (
                 <li
                   key={school.id}
                   onClick={() => handleClassSelect(school)}
-                  className="flex items-center px-1 py-2 space-x-4 border-2 border-white rounded-xl mt-6 cursor-pointer hover:bg-gray-100"
+                  className="flex items-center px-1 py-3 space-x-2 border-2 border-white rounded-xl mt-8 cursor-pointer hover:bg-gray-100"
                 >
                   <div>
-                    <h3 className="text-sm font-semibold truncate w-64 font-lexend-exa">{school.class_name}</h3>
+                    <h3 className="mx-6 text-lg font-semibold truncate w-64 font-lexend-exa">{school.class_name}</h3>
                   </div>
                 </li>
               ))}
