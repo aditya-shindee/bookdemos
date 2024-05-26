@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, addDoc } from "firebase/firestore"; 
 import { db } from "../../firebase-config.js";
 import { useNavigate } from 'react-router-dom';
 import './search.css';
@@ -36,12 +36,21 @@ const SearchSchoolScreen = () => {
     school.class_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleClassSelect = async (school) => {
+    try {
+      // Log the button click event
+      logEvent(analytics, 'button_click', {
+        class: school.class_name,
+      });
+      
+      const classId = { class_id: school.class_name, timestamp: Date.now() }
+      await addDoc(collection(db, 'users_selected'), classId);
 
-  const handleClassSelect = (school) => {
-    logEvent(analytics, 'button_click', {
-      class: school.class_name,
-    });
-    navigate(`/books`);
+      // Navigate to the class page
+      navigate(`/books`);
+    } catch (error) {
+      console.error('Error adding document: ', error);
+    }
   };
   
   return (

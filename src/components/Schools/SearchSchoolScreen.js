@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, addDoc } from "firebase/firestore";
 import { db } from "../../firebase-config.js";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ReactComponent as CloseIcon } from '../../close_icon2.svg';
@@ -12,7 +12,6 @@ const SearchSchoolScreen = () => {
   const navigate = useNavigate();
   const [schools, setSchools] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Firestore reference
   const schoolsCollectionRef = collection(db, "school");
@@ -57,13 +56,22 @@ const SearchSchoolScreen = () => {
     setSearchTerm(e.target.value);
   };
 
-  const handleSchoolSelect = (school) => {
-    logEvent(analytics, 'button_click', {
-      school: school.school_id,
-    });
 
-    navigate(`/class/${school.school_id}`, { state: { school } });
+  const handleSchoolSelect = async (school) => {
+    try {
+      // Log the button click event
+      logEvent(analytics, 'button_click', {
+        school: school.school_id,
+      });
 
+      const schoolId = { school_id: school.school_id,  timestamp: Date.now()}
+      await addDoc(collection(db, 'users_selected'), schoolId);
+
+      // Navigate to the class page
+      navigate(`/class/${school.school_id}`, { state: { school } });
+    } catch (error) {
+      console.error('Error adding document: ', error);
+    }
   };
 
   
