@@ -22,6 +22,15 @@ const BookScreen = () => {
       return phoneRegex.test(value);
   };
 
+  function getDeviceId() {
+    const localStorageKey = 'device_id';
+    let deviceId = localStorage.getItem(localStorageKey);
+    if (!deviceId) {
+      deviceId = "null";
+    }
+    return deviceId;
+  }
+
   const formik = useFormik({
       initialValues: {
           contact: '',
@@ -34,7 +43,7 @@ const BookScreen = () => {
               }),
       }),
       onSubmit: async (values, { setSubmitting }) => {
-          const userContact = { contact: values.contact }; // Structure the data as desired for Firestore
+          const userContact = { u_id: getDeviceId(), contact: values.contact }; // Structure the data as desired for Firestore
 
           try {
               await addDoc(collection(db, "users"), userContact);

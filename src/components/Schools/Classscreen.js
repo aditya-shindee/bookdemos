@@ -1,18 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs, addDoc } from "firebase/firestore"; 
 import { db } from "../../firebase-config.js";
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import './search.css';
 import { analytics } from "../../firebase-config.js";// Adjust the path as necessary
 import { logEvent } from 'firebase/analytics';
 
 const SearchSchoolScreen = () => {
   const navigate = useNavigate();
+  const { schoolId } = useParams(); 
   const [schools, setSchools] = useState([]);
   const [searchTerm] = useState('');
 
   // Firestore reference
   const schoolsCollectionRef = collection(db, "class");
+
+  function getDeviceId() {
+    const localStorageKey = 'device_id';
+    let deviceId = localStorage.getItem(localStorageKey);
+    if (!deviceId) {
+      deviceId = "null";
+    }
+    return deviceId;
+  }
 
   useEffect(() => {
     const fetchSchools = async () => {
@@ -43,7 +53,7 @@ const SearchSchoolScreen = () => {
         class: school.class_name,
       });
       
-      const classId = { class_id: school.class_name, timestamp: Date.now() }
+      const classId = { u_id: getDeviceId(), schoolId, class_id: school.class_name, timestamp: Date.now() }
       await addDoc(collection(db, 'users_selected'), classId);
 
       // Navigate to the class page
